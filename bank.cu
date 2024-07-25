@@ -443,8 +443,8 @@ int main(int argc, char *argv[])
   //if(kernelErr != cudaSuccess) printf("Error synchronize: %s\n", cudaGetErrorString(kernelErr));
   
   STM_copy_from_device(d_stm_data,stm_data);
-  //printf("FIM!\n");
-  //print_stats(stm_data);
+  printf("FIM!\n");
+  print_stats(stm_data);
     print_data(stm_data);
 
 	free(h_stats);

@@ -168,6 +168,8 @@ __device__ void TX_garbage_collect(STMData* stm_data, TX_Data* tx_data)
             next --;
       } else {
             tx_data -> locator_queue [tx_data -> next_locator] = next_locator;
+            int id = stm_data -> locators[next_locator].id;
+            assert(atomicCAS(&stm_data -> locators[next_locator].id,id ,id+1));
             tx_data -> next_locator --;
             next --;
       }

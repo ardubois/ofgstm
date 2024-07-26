@@ -285,18 +285,19 @@ __device__ int TX_validate_readset(STMData* stm_data, TX_Data* tx_data)
   {
     int *current_value = 0;
     Locator *loc = &stm_data -> locators[read_set -> locator[i]];
-    int id = loc -> id;
+    
+    if(!( stm_data -> vboxes[read_set->object[i]] == read_set -> locator[i]))
+    { return 0;}
+    Locator *loc = &stm_data -> locators[read_set -> locator[i]];
     if (stm_data->tr_state[loc -> owner] == COMMITTED)
        { current_value = loc -> new_version;}
     if (stm_data->tr_state[loc -> owner] == ABORTED || stm_data->tr_state[loc -> owner] == ACTIVE)
        { current_value = loc -> old_version;}
     assert(current_value != 0);
-    int id2 = loc -> id;
-    if(id != id2)
+    int id = loc -> id;
+    if(read_set -> id[i] != id)
       {return 0;}
-    if(!( stm_data -> vboxes[read_set->object[i]] == read_set -> locator[i] &&
-          read_set -> id[i] == id && 
-          read_set -> value[i] == current_value ))
+    if(read_set -> value[i] != current_value ))
       {return 0;}
   }
   return 1;

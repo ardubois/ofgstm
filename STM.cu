@@ -286,8 +286,7 @@ __device__ int TX_validate_readset(STMData* stm_data, TX_Data* tx_data)
   for (int i=0;i<size;i++)
   {
     int *current_value = 0;
-    Locator *loc = &stm_data -> locators[read_set -> locator[i]];
-    
+   
     if(!( stm_data -> vboxes[read_set->object[i]] == read_set -> locator[i]))
     { return 0;}
     Locator *loc = &stm_data -> locators[read_set -> locator[i]];
@@ -299,7 +298,7 @@ __device__ int TX_validate_readset(STMData* stm_data, TX_Data* tx_data)
     int id = loc -> id;
     if(read_set -> id[i] != id)
       {return 0;}
-    if(read_set -> value[i] != current_value ))
+    if(read_set -> value[i] != current_value )
       {return 0;}
   }
   return 1;

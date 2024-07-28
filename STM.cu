@@ -347,31 +347,36 @@ __device__ int TX_commit(STMData* stm_data, TX_Data* tx_data)
      return 0;         
 }
 
-__device__ void open_locator(STMData* stm_data, TX_Data* tx_data, uint object, Locator *locator)
+__device__ void open_locator(STMData* stm_data, TX_Data* tx_data, 
+                              uint object, Locator *locator, int *addr)
 {
+
+ Locator* curr_locator;
+ int id2;
   do{  
     do{
-      int addr_locator =  stm_data -> vboxes[object];
-      Locator* curr_locator = &stm_data -> locators[addr_locator];
-      locator -> id = curr_locator -> id;
-    } while(addr_locator !=  stm_data -> vboxes[object])
+       *addr =  stm_data -> vboxes[object];
+        curr_locator = &stm_data -> locators[*addr];
+        locator -> id = curr_locator -> id;
+    } while(*addr !=  stm_data -> vboxes[object]);
+    
     locator -> owner =  curr_locator -> owner;
     locator -> object =  curr_locator -> object;
     locator -> new_version =  curr_locator -> new_version;
     locator -> old_version=  curr_locator -> old_version;
-    int id2 = curr_locator -> id;
-  } while(id != id2)
+    id2 = curr_locator -> id;
+  } while(locator -> id != id2);
 }
 
 __device__  int* TX_Open_Write(STMData* stm_data, TX_Data* tx_data, uint object)
 {
   
   Locator locator_copy;
-       
+  int addr_locator;     
    while (stm_data->tr_state[tx_data->tr_id] != ABORTED)
    {
     
-     open_locator(stm_data, tx_data, object, &locator_copy);
+     open_locator(stm_data, tx_data, object, &locator_copy, &addr_locator);
      Locator *locator = &locator_copy;
      if (locator -> owner == tx_data->tr_id)
         return locator -> new_version;

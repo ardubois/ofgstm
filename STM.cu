@@ -347,21 +347,36 @@ __device__ int TX_commit(STMData* stm_data, TX_Data* tx_data)
      return 0;         
 }
 
+__device__ void open_locator(STMData* stm_data, TX_Data* tx_data, uint object, Locator *locator)
+{
+  do{  
+    do{
+      int addr_locator =  stm_data -> vboxes[object];
+      Locator* curr_locator = &stm_data -> locators[addr_locator];
+      locator -> id = curr_locator -> id;
+    } while(addr_locator !=  stm_data -> vboxes[object])
+    locator -> owner =  curr_locator -> owner;
+    locator -> object =  curr_locator -> object;
+    locator -> new_version =  curr_locator -> new_version;
+    locator -> old_version=  curr_locator -> old_version;
+    int id2 = curr_locator -> id;
+  } while(id != id2)
+}
 
 __device__  int* TX_Open_Write(STMData* stm_data, TX_Data* tx_data, uint object)
 {
-   int addr_locator =  stm_data -> vboxes[object];
-   Locator* locator = &stm_data -> locators[addr_locator]; 
-  //Locator *locator = stm_data -> vboxes[object];
-  if (locator -> owner == tx_data->tr_id)
-      return locator -> new_version;
-
+  
+  Locator locator_copy;
+       
    while (stm_data->tr_state[tx_data->tr_id] != ABORTED)
    {
     
-       int addr_locator =  stm_data -> vboxes[object];
-      Locator* locator = &stm_data -> locators[addr_locator];
-      int addr_new_locator = TX_new_locator(stm_data,tx_data);
+     open_locator(stm_data, tx_data, object, &locator_copy);
+     Locator *locator = &locator_copy;
+     if (locator -> owner == tx_data->tr_id)
+        return locator -> new_version;
+
+     int addr_new_locator = TX_new_locator(stm_data,tx_data);
    //   int next_locator = tx_data -> locator_queue [tx_data->next_locator];
       Locator *new_locator = &stm_data -> locators[addr_new_locator];
       new_locator -> owner = tx_data->tr_id;
@@ -704,7 +719,7 @@ for(int i=0;i<total_locators;i++)
     stm_data-> locators_data[2*i+1] = 0;
     stm_data-> locators[i].new_version = &stm_data->locators_data[2*i];
     stm_data-> locators[i].old_version = &stm_data->locators_data[2*i+1];
-    
+    stm_data-> locators[i].id = 0;
   }
 }
 

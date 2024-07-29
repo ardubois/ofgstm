@@ -180,7 +180,7 @@ __global__ void bank_kernel(int *flag, unsigned int seed, int prRead, unsigned i
                 		int* ptr2 = TX_Open_Write(stm_data,tx_data,addr2);
 						if(ptr2 !=0 )
                 		{
-                    		*ptr1 -= 1;
+                    		*ptr1 -= 2;
                     		*ptr2 += 1;
                         }
 				    }

@@ -618,11 +618,15 @@ __device__  int TX_contention_manager(STMData* stm_data, TX_Data* tx_data,unsign
 __device__ int TX_Open_Read(STMData* stm_data, TX_Data* tx_data, uint object)
 {
     int* version;
-    int addr_locator = stm_data -> vboxes[object];
-    Locator *locator = &stm_data-> locators[addr_locator];
-    int id = locator -> id;
-    if (stm_data -> vboxes[object] != addr_locator)
-      { return 0;}
+    int addr_locator;
+    Locator *locator;
+    int id;
+    do{  
+      addr_locator= stm_data -> vboxes[object];
+      locator = &stm_data-> locators[addr_locator];
+      id = locator -> id;
+    }while(stm_data -> vboxes[object] != addr_locator);
+     
     switch (stm_data->tr_state[locator -> owner]) {
             case COMMITTED:
               version =  locator->new_version;

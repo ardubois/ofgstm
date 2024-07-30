@@ -810,6 +810,7 @@ void print_stats(STMData* stm_data)
   for (int i = 0; i < stm_data -> n_objects; i++)
   {
     Locator *loc = &stm_data-> locators[stm_data -> vboxes[i]];
+    print_locator(stm_data,loc);
     //printf("i: %d \n", stm_data -> vboxes[i] );
     //if (stm_data->tr_state[loc->owner] != COMMITTED)
     //{

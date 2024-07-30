@@ -181,7 +181,7 @@ __global__ void bank_kernel(int *flag, unsigned int seed, int prRead, unsigned i
 						if(ptr2 !=0 )
                 		{
                     		*ptr1 -= 1;
-                    		*ptr2 += 1;
+                    		*ptr2 += 5;
                         }
 				    }
 				}

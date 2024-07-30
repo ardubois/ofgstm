@@ -277,8 +277,8 @@ __device__ int TX_new_locator(STMData* stm_data, TX_Data* tx_data)
 
 __device__ int TX_validate_readset(STMData* stm_data, TX_Data* tx_data)
 {
-  if (tx_data-> write_set.size == 0)
-  { return 1; }
+//  if (tx_data-> write_set.size == 0)
+ // { return 1; }
 
   ReadSet* read_set = &tx_data-> read_set;
   int size = tx_data-> read_set.size;
@@ -646,19 +646,20 @@ __device__ int TX_Open_Read(STMData* stm_data, TX_Data* tx_data, uint object)
     if(id != id2)
           {return 0;}
               
-    if(TX_validate_readset(stm_data,tx_data))
-              {    ReadSet* read_set = &tx_data-> read_set;
+    //if(TX_validate_readset(stm_data,tx_data))
+      //        {    
+                  ReadSet* read_set = &tx_data-> read_set;
                   int size = tx_data-> read_set.size;
                   read_set -> locator[size] = addr_locator;
                   read_set -> value[size] = version;
                   read_set -> object[size] = object;
                   read_set -> id[size] = id;
                   read_set -> size ++;
-                   return *version;
-              }
-    atomicCAS(&stm_data->tr_state[tx_data->tr_id],ACTIVE ,ABORTED);
-    assert(stm_data->tr_state[tx_data->tr_id] == ABORTED) ;
-    return 0; 
+                  return *version;
+        //      }
+    //atomicCAS(&stm_data->tr_state[tx_data->tr_id],ACTIVE ,ABORTED);
+    //assert(stm_data->tr_state[tx_data->tr_id] == ABORTED) ;
+    //return 0; 
 }
 
 

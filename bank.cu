@@ -121,6 +121,7 @@ __global__ void bank_kernel(int *flag, unsigned int seed, int prRead, unsigned i
             //printf("1TXISABORTED %d\n", txData.isAborted);			
 			//Read-Only TX
 			//printf("rnd %d probread %d\n", rnd, probRead);
+			int read_only = (rnd <= probRead); 
 			if(rnd <= probRead)
 			{
 				//printf("rnd %d probread %d\n", rnd, probRead);
@@ -199,6 +200,7 @@ __global__ void bank_kernel(int *flag, unsigned int seed, int prRead, unsigned i
 			if(stm_data->tr_state[tx_data->tr_id] == COMMITTED)
                         {//trans ++;
                    //       __syncthreads();
+				     if(!read_only)
                           TX_garbage_collect(stm_data,tx_data);
 						 // printf("COMMITED: %d -- ABORTED %d\n",stm_data->tr_state[stm_data-> num_tr],stm_data->tr_state[stm_data-> num_tr+1]);
                      //     __syncthreads();
